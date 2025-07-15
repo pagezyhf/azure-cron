@@ -6,7 +6,7 @@ and update webhook watched items with the models in the dataset
 
 import os
 from datasets import load_dataset
-from huggingface_hub import update_webhook, HfApi
+from huggingface_hub import update_webhook, HfApi, get_webhook
 import logging
 
 # Configure logging
@@ -34,14 +34,25 @@ def update_webhook_watched_items(dataset_id, webhook_id):
             "type": "model",
             "name": model_name
         })
+    logger.info(f"Found {watched_items}")
 
-    # update webhook    
-    updated_webhook = update_webhook(
-        webhook_id=webhook_id,
-        watched=watched_items
-    )
-    logger.info(f"Updated webhook: {updated_webhook}")
+    # Get current webhook configuration to preserve existing values
+    try:
+        current_webhook = get_webhook(webhook_id)
+        
+        # Update webhook preserving existing url, domains, and secret
+        updated_webhook = update_webhook(
+            webhook_id=webhook_id,
+            watched=watched_items,
+            url=current_webhook.url,
+            domains=current_webhook.domains,
+            secret=current_webhook.secret
+        )
+    except Exception as e:
+        logger.error(f"Failed to get current webhook config: {e}")
     
+    logger.info(f"Updated webhook: {updated_webhook}")
+
     return updated_webhook
 
 
