@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Script to load the private dataset pagezyhf/azure-models from Hugging Face Hub
-and update webhook watched items with the models in the dataset
+Script to load a dataset with model_ids from the hub
+and update the list of watched items of the webhook
 """
 
-import os
+import sys
 from datasets import load_dataset
 from huggingface_hub import update_webhook, HfApi, get_webhook
 import logging
@@ -57,9 +57,11 @@ def update_webhook_watched_items(dataset_id, webhook_id):
 
 
 def main():
-    # Configuration
-    WEBHOOK_ID = "686fc4680e57742d7a789d41"
-    DATASET_ID = "pagezyhf/azure-models"
+    
+    webhook_id = sys.argv[1]
+    dataset_id = sys.argv[2]
+    
+    logger.info(f"Updating webhook: {webhook_id} with dataset: {dataset_id}")
 
     # Check Hugging Face Hub login status
     hf_api_for_login_check = HfApi()
@@ -75,7 +77,7 @@ def main():
         print("Exiting due to authentication issue. Please run 'huggingface-cli login'.")
         return # Exit the main function if not logged in.
 
-    update_webhook_watched_items(DATASET_ID, WEBHOOK_ID)
+    update_webhook_watched_items(dataset_id, webhook_id)
 
 if __name__ == "__main__":
     main()

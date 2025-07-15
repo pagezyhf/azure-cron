@@ -1,0 +1,56 @@
+name: Update webhook to track simship orgs model creation
+
+on:
+  schedule:
+    # Runs at 12:00 UTC every day
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-webhook-model-catalog:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install huggingface-hub datasets
+
+    - name: Run update webhook script for model catalog
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        MODEL_CATALOG_WEBHOOK: 686fc4680e57742d7a789d41
+        MODEL_CATALOG_DATASET: hf-azure-internal/model-catalog
+      run: 
+        python update_webhook_watchlist.py ${{ env.MODEL_CATALOG_WEBHOOK }} ${{ env.MODEL_CATALOG_DATASET }}
+
+  update-webhook-simship-orgs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install huggingface-hub datasets
+
+    - name: Run update webhook script for simship orgs
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        SIMSHIP_WEBHOOK: 687682b6e017005986ef48bc
+        SIMSHIP_DATASET: hf-azure-internal/simship-orgs
+      run: 
+        python update_webhook_|watchlist.py ${{ env.SIMSHIP_WEBHOOK }} ${{ env.SIMSHIP_DATASET }}
