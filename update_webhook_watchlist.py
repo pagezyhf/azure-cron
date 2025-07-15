@@ -22,19 +22,10 @@ def update_webhook_watched_items(dataset_id, webhook_id):
     dataset = load_dataset(dataset_id)
     dataset_train = dataset['train']
     
-    # Extract unique model names
-    model_names = []
-    model_names = list({row['model_id'] for row in dataset_train if row['model_id']})
-    logger.info(f"Found {len(model_names)} unique models")
-    
-    # Create watched items list for models
-    watched_items = []
-    for model_name in model_names:
-        watched_items.append({
-            "type": "model",
-            "name": model_name
-        })
-    logger.info(f"Found {watched_items}")
+    # Create watched items list from dataset rows
+    watched_items = [{"type": row['type'], "name": row['id']} for row in dataset_train]
+    logger.info(f"Found {len(watched_items)} unique watched items")
+    logger.info(f"Watched items: {watched_items}")
 
     # Get current webhook configuration to preserve existing values
     try:
