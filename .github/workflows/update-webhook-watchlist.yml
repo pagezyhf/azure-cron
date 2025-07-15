@@ -1,4 +1,4 @@
-name: Update webhook to track simship orgs model creation
+name: webhook-watchlist-updater
 
 on:
   schedule:
