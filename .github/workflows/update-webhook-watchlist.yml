@@ -53,4 +53,4 @@ jobs:
         SIMSHIP_WEBHOOK: 687682b6e017005986ef48bc
         SIMSHIP_DATASET: hf-azure-internal/simship-orgs
       run: 
-        python update_webhook_|watchlist.py ${{ env.SIMSHIP_WEBHOOK }} ${{ env.SIMSHIP_DATASET }}
+        python update_webhook_watchlist.py ${{ env.SIMSHIP_WEBHOOK }} ${{ env.SIMSHIP_DATASET }}
