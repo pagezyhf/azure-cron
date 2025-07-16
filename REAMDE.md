@@ -4,4 +4,4 @@ Automatically updates Hugging Face webhook watchlists daily, based on model list
 - Updates webhook watchlists to track those models (webhook are owned by https://huggingface.co/pagezyhf)
 - Runs daily at 12:00 UTC via GitHub Actions
 
-Requires `HF_TOKEN` secret to be set at github repo level for authentication.
+Requires `HF_TOKEN` secret to be set at github repo level for authentication, with read access to `hf-azure-internal`repo and write access to `pagezyhf` webhooks.
