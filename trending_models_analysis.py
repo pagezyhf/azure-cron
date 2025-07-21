@@ -193,7 +193,7 @@ def prepare_model_data(models):
 
     for model in models:
         author = model.modelId.split('/')[0] if '/' in model.modelId else ""
-        license = [tag[7:] for tag in model.tags if tag.startswith("license:")]
+        license = [tag[8:] for tag in model.tags if tag.startswith("license:")]
         logger.info(f"Processing model: {model.modelId}")
         model_data.append({
             ## raw data
