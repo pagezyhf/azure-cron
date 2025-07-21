@@ -98,6 +98,7 @@ SUPPORTED_TASKS = [
     "visual-question-answering",
     "image-to-text"
 ]
+SUPPORTED_LIBRARIES = ['diffusers', 'transformers']
 
 def get_trending_models_and_datasets():
     """Fetch top 200 trending models from Hugging Face Hub."""
@@ -192,28 +193,22 @@ def prepare_model_data(models):
 
     for model in models:
         author = model.modelId.split('/')[0] if '/' in model.modelId else ""
-        license = [tag for tag in model.tags if tag.startswith("license:")]
+        license = [tag[7:] for tag in model.tags if tag.startswith("license:")]
         logger.info(f"Processing model: {model.modelId}")
         model_data.append({
             ## raw data
             "id": model.modelId,
-            "type": "model",
             "author": author,
-            "downloads": model.downloads if hasattr(model, 'downloads') else 0,
-            "likes": model.likes if hasattr(model, 'likes') else 0,
             "tags": model.tags if hasattr(model, 'tags') else [],
-            "last_modified": model.lastModified,
-            "created_at": model.createdAt if hasattr(model, 'createdAt') else None,
-            "sha": model.sha,
             'license': license,
             'library_name': model.library_name,
-            'gated': str(model.gated) if model.gated is not None else "False",
+            'gated': bool(model.gated),
             ## logic to check supported prerequisites
             'is_in_catalog' : is_model_in_catalog(model.modelId),
             'is_custom_code': 'custom_code' in model.tags,
             'is_excluded_org' : author in EXCLUDED_ORGS, 
             'is_supported_license' : bool(license) and any(l in ALLOWED_LICENSES for l in license),
-            'is_supported_library' : model.library_name in ['diffusers', 'transformers'],
+            'is_supported_library' : model.library_name in SUPPORTED_LIBRARIES,
             'is_safetensors': 'safetensors' in model.tags or is_safetensors_bot_pr(model.modelId),
             'is_supported_task' : model.pipeline_tag in SUPPORTED_TASKS,
             'is_securely_scanned' : is_security_scanned(model.modelId),
