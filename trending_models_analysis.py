@@ -190,19 +190,23 @@ def prepare_model_data(models):
     """Prepare model data for the dataset."""
     model_data = []
     logger.info(f"Preparing model data for trending models...")
+    count = 0
 
     for model in models:
         author = model.modelId.split('/')[0] if '/' in model.modelId else ""
         license = [tag[8:] for tag in model.tags if tag.startswith("license:")]
         logger.info(f"Processing model: {model.modelId}")
+        count += 1
         model_data.append({
             ## raw data
             "id": model.modelId,
+            "trending_rank": count,
             "author": author,
             "tags": model.tags if hasattr(model, 'tags') else [],
             'license': license,
             'library_name': model.library_name,
             'gated': bool(model.gated),
+            'task': model.pipeline_tag,
             ## logic to check supported prerequisites
             'is_in_catalog' : is_model_in_catalog(model.modelId),
             'is_custom_code': 'custom_code' in model.tags,
