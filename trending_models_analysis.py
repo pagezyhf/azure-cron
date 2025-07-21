@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
 
 # Constants
-COLLECTION_DATE = datetime.now(datetime.timezone.utc).isoformat()
+COLLECTION_DATE = datetime.utcnow().isoformat()
 EXCLUDED_ORGS = ['meta-llama', 'mistralai']
 ALLOWED_LICENSES = [
     "apache-2.0",
@@ -98,8 +98,6 @@ SUPPORTED_TASKS = [
     "visual-question-answering",
     "image-to-text"
 ]
-
-
 
 def get_trending_models_and_datasets():
     """Fetch top 200 trending models from Hugging Face Hub."""
