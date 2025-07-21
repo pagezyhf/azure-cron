@@ -141,7 +141,7 @@ def is_safetensors_bot_pr(model_id):
         # Find the most recent PR
         return discussions
     except Exception as e:
-        print(f"Error fetching PR for {model_id}: {str(e)}")
+        logger.error(f"Error fetching PR for {model_id}: {str(e)}")
         return None
 
 def is_model_in_catalog(model_id):
@@ -157,7 +157,7 @@ def is_security_scanned(model_id):
     url = f"https://huggingface.co/api/models/{model_id}?securityStatus=1&expand[]=sha"
     
     try:
-        print(f"Checking security status for {model_id}")
+        logger.info(f"Checking security status for {model_id}")
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
@@ -185,7 +185,7 @@ def is_security_scanned(model_id):
                     
         return None  # Security status not found or request failed
     except Exception as e:
-        print(f"Error checking {model_id}: {str(e)}")
+        logger.error(f"Error checking {model_id}: {str(e)}")
         return None
 
 def prepare_model_data(models):
@@ -269,7 +269,7 @@ def update_dataset(models_df, dataset_repo):
 def main():
     # Configuration
     if len(sys.argv) < 2:
-        print("Usage: python trending_analysis.py <DATASET_REPO>")
+        logger.error("Usage: python trending_analysis.py <DATASET_REPO>")
         return
 
     DATASET_REPO = sys.argv[1]
@@ -285,7 +285,7 @@ def main():
             "Please ensure you are logged in using 'huggingface-cli login'. "
             "The script needs to push data to the Hub."
         )
-        print("Exiting due to authentication issue. Please run 'huggingface-cli login'.")
+        logger.error("Exiting due to authentication issue. Please run 'huggingface-cli login'.")
         return # Exit the main function if not logged in.
 
     # Get data
