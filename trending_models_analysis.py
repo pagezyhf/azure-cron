@@ -137,10 +137,10 @@ def is_safetensors_bot_pr(model_id):
         ))
         
         # Find the most recent PR
-        return discussions
+        return bool(discussions)
     except Exception as e:
         logger.error(f"Error fetching PR for {model_id}: {str(e)}")
-        return None
+        return False
 
 def is_model_in_catalog(model_id):
     """Check if the model is in the Azure Model Catalog"""
