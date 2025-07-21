@@ -1,5 +1,5 @@
 from huggingface_hub import HfApi, get_repo_discussions
-from datasets import Dataset, concatenate_datasets
+from datasets import Dataset, concatenate_datasets, load_dataset, DatasetDict
 from datetime import datetime
 import pandas as pd
 import sys
@@ -207,7 +207,7 @@ def prepare_model_data(models):
             "sha": model.sha,
             'license': license,
             'library_name': model.library_name,
-            'gated': model.gated,
+            'gated': str(model.gated) if model.gated is not None else "False",
             ## logic to check supported prerequisites
             'is_in_catalog' : is_model_in_catalog(model.modelId),
             'is_custom_code': 'custom_code' in model.tags,
@@ -241,9 +241,7 @@ def prepare_model_data(models):
 
 
 def update_dataset(models_df, dataset_repo):
-    """Update or create the dataset with new data."""
-    from datasets import load_dataset, DatasetDict
-    
+    """Update or create the dataset with new data."""   
     try:
         # Try to load existing dataset
         existing_ds = load_dataset(dataset_repo)
