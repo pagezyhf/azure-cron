@@ -144,9 +144,9 @@ def is_safetensors_bot_pr(model_id):
 
 def is_model_in_catalog(model_id):
     """Check if the model is in the Azure Model Catalog"""
-    response = requests.get(requests.get(
+    response = requests.get(
         url="https://generate-azureml-urls.azurewebsites.net/api/generate", 
-        params={"modelId": model_id})
+        params={"modelId": model_id}
     )
     return response.status_code == 200
 
