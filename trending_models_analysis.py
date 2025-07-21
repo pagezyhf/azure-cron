@@ -155,7 +155,6 @@ def is_security_scanned(model_id):
     url = f"https://huggingface.co/api/models/{model_id}?securityStatus=1&expand[]=sha"
     
     try:
-        logger.info(f"Checking security status for {model_id}")
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
@@ -189,10 +188,12 @@ def is_security_scanned(model_id):
 def prepare_model_data(models):
     """Prepare model data for the dataset."""
     model_data = []
+    logger.info(f"Preparing model data for trending models...")
+
     for model in models:
         author = model.modelId.split('/')[0] if '/' in model.modelId else ""
         license = [tag for tag in model.tags if tag.startswith("license:")]
-        
+        logger.info(f"Processing model: {model.modelId}")
         model_data.append({
             ## raw data
             "id": model.modelId,
@@ -219,6 +220,7 @@ def prepare_model_data(models):
             "collected_at": COLLECTION_DATE
         })
 
+    logger.info(f"Checking model status for trending models...")
     for model in model_data:
         if model['is_in_catalog']:
             model['model_status'] = 'added'
