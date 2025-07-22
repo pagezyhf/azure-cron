@@ -96,9 +96,12 @@ SUPPORTED_TASKS = [
     "table-question-answering",
     "zero-shot-classification",
     "visual-question-answering",
-    "image-to-text"
+    "image-to-text",
+    'sentence-similarity',
+    'summarization',
+    'image-text-to-text'
 ]
-SUPPORTED_LIBRARIES = ['diffusers', 'transformers']
+SUPPORTED_LIBRARIES = ['diffusers', 'transformers', 'sentence-transformers']
 
 def get_trending_models_and_datasets():
     """Fetch top 200 trending models from Hugging Face Hub."""
@@ -295,14 +298,15 @@ def main():
     update_dataset(models_df, DATASET_REPO)
 
     # Send Slack message
-    # message = (
-    #     "📈 Trending Models Analysis 📈\n\n"
-    #     f"To add: {models_df[models_df['model_status'] == 'to add'].shape[0]}\n"
-    #     f"Blocked: {models_df[models_df['model_status'] == 'blocked'].shape[0]}\n"
-    #     f"Added: {models_df[models_df['model_status'] == 'added'].shape[0]}\n"
-    #     f"View details: https://hf.co/spaces/hf-azure-internal/trending-models-analysis"
-    # )
-    # send_slack_message(message)
+    message = (
+        "📈 Trending Models Analysis 📈\n\n"
+        f"To add: {models_df[models_df['model_status'] == 'to add'].shape[0]}\n"
+        f"Blocked: {models_df[models_df['model_status'] == 'blocked'].shape[0]}\n"
+        f"Added: {models_df[models_df['model_status'] == 'added'].shape[0]}\n"
+        f"View dataset details: https://hf.co/datasets/hf-azure-internal/trending-models-analysis\n"
+        f"View dashboard details: https://hf.co/spaces/hf-azure-internal/trending-models-analysis"
+    )
+    send_slack_message(message)
 
 
 if __name__ == "__main__":
