@@ -3,7 +3,7 @@ name: trending-models-analysis
 on:
   schedule:
     # Runs at 12:00 UTC every day
-    - cron: '0 12 * * *'
+    - cron: '0 12 * * 1'
   workflow_dispatch:
 
 jobs:
