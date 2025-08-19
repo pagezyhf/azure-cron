@@ -116,17 +116,16 @@ def get_trending_models_and_datasets():
     )
     return models
 
-def send_slack_message(message: str):
+def send_slack_message(payload: dict):
     """Send a message to Slack using webhook URL"""
     if not SLACK_WEBHOOK_URL:
-        logger.warning(f"No Slack webhook URL configured. Message: {message}")
+        logger.warning(f"No Slack webhook URL configured. Message: {payload}")
         return
-    
-    payload = {"text": message}
+
     try:
         response = requests.post(SLACK_WEBHOOK_URL, json=payload)
         response.raise_for_status()
-        logger.info(f"Slack message sent successfully: {message}")
+        logger.info(f"Slack payload sent successfully: {payload}")
     except requests.exceptions.RequestException as e:
         logger.error(f"Failed to send Slack message: {e}")
 
@@ -306,7 +305,12 @@ def main():
         f"View dataset details: https://hf.co/datasets/hf-azure-internal/trending-models-analysis\n"
         f"View dashboard details: https://hf.co/spaces/hf-azure-internal/trending-models-analysis"
     )
-    send_slack_message(message)
+    payload = {
+        "text": message,
+        "type": "trending-models-analysis",
+        "link": "https://hf.co/datasets/hf-azure-internal/trending-models-analysis"
+    }
+    send_slack_message(payload)
 
 
 if __name__ == "__main__":
